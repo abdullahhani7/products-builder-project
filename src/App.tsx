@@ -1,21 +1,37 @@
-import { useState } from "react";
+import { useState, type ChangeEvent } from "react";
 import ProductCard from "./components/ProductCard";
 import Modal from "./components/ui/Modal";
-import { formInputsList, productList } from "./data";
+import { formInputsList, productList, type IProduct } from "./data";
 import Button from "./components/ui/Button";
 import Input from "./components/ui/Input";
 
 function App() {
   // ** STATE
+  const [product, setProduct] = useState<IProduct>({
+    title: "",
+    description: "",
+    imageURL: "",
+    price: "",
+    colors: [],
+    category: {
+      name: "",
+      imageURL: "",
+    },
+  });
+
   const [isOpen, setIsOpen] = useState(false);
 
   // ** HANDLER
-  function closeModal() {
-    setIsOpen(false);
-  }
-  function openModal() {
-    setIsOpen(true);
-  }
+  const closeModal = () => setIsOpen(false);
+  const openModal = () => setIsOpen(true);
+
+  const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = event.target;
+    setProduct({
+      ...product,
+      [name]: value,
+    });
+  };
 
   // ** Renders
   const renderProductsList = productList.map((product) => (
@@ -29,7 +45,15 @@ function App() {
       >
         {input.label}
       </label>
-      <Input type="text" id={input.id} name={input.name} />{" "}
+      <Input
+        type="text"
+        id={input.id}
+        name={input.name}
+        // ** Line Bellow Is Wrong Now, Fix It
+        // value={product[""]}
+        value={""}
+        onChange={onChangeHandler}
+      />{" "}
     </div>
   ));
 
